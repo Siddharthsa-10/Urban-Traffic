@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NADI // Quantum-Enhanced Adaptive Urban Traffic Optimization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Console Header -->
+    <header class="top-console">
+      <div class="brand-section">
+        <span class="brand-title">NADI</span>
+        <span class="brand-tagline">Quantum-Enhanced Adaptive Urban Traffic</span>
+      </div>
+
+      <!-- Mode Switch: Guided Demo (Default) vs Control Room -->
+      <div class="mode-tabs">
+        <button id="tab-guided" class="mode-tab-btn active">GUIDED DEMO</button>
+        <button id="tab-control-room" class="mode-tab-btn">CONTROL ROOM</button>
+      </div>
+
+      <!-- Massive Top Hero Metric Headline -->
+      <div class="top-hero-banner" title="Computed live across all simulated vehicles compared against fixed-time baseline">
+        <span class="hero-metric-label">AVERAGE WAIT:</span>
+        <span id="hero-avg-wait" class="hero-metric-value num">14.8s</span>
+        <span id="hero-avg-delta" class="hero-metric-delta num">-23.8s (-62% vs fixed)</span>
+      </div>
+
+      <div class="shift-status-group">
+        <span id="conn-status-badge" class="badge badge-amber">ONLINE</span>
+        <span id="fallback-badge" class="badge badge-quantum" data-glossary="qaoa">QAOA (QUANTUM)</span>
+        <div id="clock-display" class="clock-display">02:00:00</div>
+        <button id="btn-audio" class="btn-action" style="padding: 4px 10px; font-size: 13px;">SOUND: OFF</button>
+      </div>
+    </header>
+
+    <!-- Center Stage Map Viewport -->
+    <main class="stage-container">
+      <canvas id="city-canvas"></canvas>
+
+      <!-- Left Dock: Event Rack -->
+      <aside class="dock-left">
+        <div class="dock-header">
+          <div>
+            <div class="dock-title">EVENT INJECTORS</div>
+            <div class="dock-subtitle">Stress-test district signal adaptation</div>
+          </div>
+        </div>
+
+        <div class="rack-group">
+          <div class="rack-label">DYNAMIC URBAN EVENTS</div>
+          <div class="rack-actions-col">
+            <button id="btn-surge" class="btn-action-rich">
+              <span class="btn-main-label">Surge x2.5</span>
+              <span class="btn-sub-label">Inject evening rush at Clock Tower</span>
+            </button>
+            <button id="btn-accident" class="btn-action-rich">
+              <span class="btn-main-label">Accident Hazard</span>
+              <span class="btn-sub-label">Block lane on Market-Bus Stand link</span>
+            </button>
+            <button id="btn-closure" class="btn-action-rich">
+              <span class="btn-main-label">Road Barricade</span>
+              <span class="btn-sub-label">Close link & force vehicles to reroute</span>
+            </button>
+            <button id="btn-ambulance" class="btn-action-rich" style="border-color: var(--signal-green);">
+              <span class="btn-main-label" style="color: var(--signal-green);">Dispatch Ambulance</span>
+              <span class="btn-sub-label">Trigger <span class="glossary-term-inline" data-glossary="green-corridor">Green Corridor</span> wave ahead</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="rack-group">
+          <div class="rack-label">EXTREME WEATHER CONDITIONS</div>
+          <select id="weather-select" class="btn-action-rich" style="width: 100%; outline: none; padding: 8px;">
+            <option value="clear">Clear Night (Dry Surface)</option>
+            <option value="rain">Monsoon Rain (Wet Asphalt)</option>
+            <option value="heavy_rain">Heavy Rain (Mill Underpass Flooded)</option>
+            <option value="fog">Dense Fog (Reduced Speeds)</option>
+          </select>
+        </div>
+
+        <div class="rack-group">
+          <div class="rack-label">FAIL-SAFE & REDUNDANCY DRILL</div>
+          <button id="btn-kill-quantum" class="btn-action-rich danger" style="width: 100%;">
+            <span class="btn-main-label" style="color: var(--signal-red);">Simulate quantum outage</span>
+            <span class="btn-sub-label">See classical safety fallback take over</span>
+          </button>
+        </div>
+
+        <!-- Dispatcher Log -->
+        <div style="padding: 8px 16px; font-size: 13px; color: var(--text-dim); text-transform: uppercase; font-weight: 600;">
+          DISPATCHER SHIFT LOG
+        </div>
+        <div id="shift-log-box" class="shift-log-box"></div>
+      </aside>
+
+      <!-- Right Dock: Three Big Controller Cards & Plain Inspector -->
+      <aside class="dock-right">
+        <!-- Three Big Controller Cards (Fixed vs Rule vs Hybrid) -->
+        <div id="controller-cards-container"></div>
+
+        <!-- Plain-Language "Why this plan" Inspector -->
+        <div id="inspector-container"></div>
+      </aside>
+    </main>
+
+    <!-- Bottom Console: Timeline Strip -->
+    <footer class="dock-bottom">
+      <div class="playback-controls">
+        <button id="btn-pause" class="btn-ctrl">PAUSE</button>
+        <button id="btn-step" class="btn-ctrl">STEP 1s</button>
+        <div style="display: flex; gap: 4px; margin-left: 12px;">
+          <button class="btn-ctrl btn-speed active" data-speed="1">1x</button>
+          <button class="btn-ctrl btn-speed" data-speed="2">2x</button>
+          <button class="btn-ctrl btn-speed" data-speed="4">4x</button>
+          <button class="btn-ctrl btn-speed" data-speed="8">8x</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="btn-toggle-drawer" class="btn-ctrl btn-quantum-drawer">
+          <span data-glossary="qaoa">QUANTUM SOLVER DRAWER</span>
+        </button>
+        <button id="btn-open-scoreboard" class="btn-ctrl">10-SEED SCOREBOARD</button>
+        <button id="btn-open-limits" class="btn-ctrl">LIMITS & ARCHITECTURE</button>
+        <button id="btn-demo-safe" class="btn-ctrl" style="color: var(--text-muted);">
+          DEMO SAFE (RECORDING)
+        </button>
+      </div>
+    </footer>
+
+    <!-- Guided Mode Overlay Container (Default View) -->
+    <div id="guided-container"></div>
+
+    <!-- Cold-lit Quantum Solver Drawer Container -->
+    <div id="solver-drawer-container"></div>
+
+    <!-- Modal Overlays -->
+    <div id="modal-container"></div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

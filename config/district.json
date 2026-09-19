@@ -1,0 +1,134 @@
+{
+  "junctions": {
+    "J1": {"id": "J1", "name": "Clock Tower", "col": 0, "row": 0, "x": 220, "y": 180},
+    "J2": {"id": "J2", "name": "Market Circle", "col": 1, "row": 0, "x": 520, "y": 180},
+    "J3": {"id": "J3", "name": "Bus Stand", "col": 2, "row": 0, "x": 820, "y": 180},
+    "J4": {"id": "J4", "name": "Hospital Gate", "col": 0, "row": 1, "x": 220, "y": 480},
+    "J5": {"id": "J5", "name": "Mill Road", "col": 1, "row": 1, "x": 520, "y": 480},
+    "J6": {"id": "J6", "name": "Bypass Cross", "col": 2, "row": 1, "x": 820, "y": 480},
+    "J7": {"id": "J7", "name": "Outer Ring North", "col": 3, "row": 0, "x": 1120, "y": 180, "optional": true},
+    "J8": {"id": "J8", "name": "Outer Ring South", "col": 3, "row": 1, "x": 1120, "y": 480, "optional": true}
+  },
+  "landmarks": {
+    "hospital": {"id": "hospital", "name": "City General Hospital", "x": 80, "y": 480, "attach": "J4", "side": "W"},
+    "incident_site": {"id": "incident_site", "name": "Highway Accident Site", "x": 960, "y": 180, "attach": "J3", "side": "E"}
+  },
+  "links": [
+    {
+      "id": "J1_J2",
+      "from": "J1",
+      "to": "J2",
+      "name": "Tower-Market Arterial",
+      "length_m": 300,
+      "lanes": 3,
+      "speed_limit_kmh": 50,
+      "capacity": 45,
+      "bidirectional": true,
+      "special": "wide_arterial"
+    },
+    {
+      "id": "J2_J3",
+      "from": "J2",
+      "to": "J3",
+      "name": "Market-Bus Stand Road",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 40,
+      "capacity": 30,
+      "bidirectional": true
+    },
+    {
+      "id": "J1_J4",
+      "from": "J1",
+      "to": "J4",
+      "name": "Old Station Link",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 40,
+      "capacity": 30,
+      "bidirectional": true
+    },
+    {
+      "id": "J2_J5",
+      "from": "J2",
+      "to": "J5",
+      "name": "Old Bazaar Lane",
+      "length_m": 300,
+      "lanes": 1,
+      "speed_limit_kmh": 30,
+      "capacity": 16,
+      "bidirectional": true,
+      "special": "narrow_lane"
+    },
+    {
+      "id": "J3_J6",
+      "from": "J3",
+      "to": "J6",
+      "name": "East Bypass Spur",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 45,
+      "capacity": 30,
+      "bidirectional": true
+    },
+    {
+      "id": "J4_J5",
+      "from": "J4",
+      "to": "J5",
+      "name": "Mill Underpass Road",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 40,
+      "capacity": 28,
+      "bidirectional": true,
+      "special": "floodable_underpass"
+    },
+    {
+      "id": "J5_J6",
+      "from": "J5",
+      "to": "J6",
+      "name": "Industrial Avenue",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 45,
+      "capacity": 32,
+      "bidirectional": true
+    },
+    {
+      "id": "J3_J7",
+      "from": "J3",
+      "to": "J7",
+      "name": "North Ring Extension",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 50,
+      "capacity": 30,
+      "bidirectional": true,
+      "optional": true
+    },
+    {
+      "id": "J6_J8",
+      "from": "J6",
+      "to": "J8",
+      "name": "South Ring Extension",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 50,
+      "capacity": 30,
+      "bidirectional": true,
+      "optional": true
+    },
+    {
+      "id": "J7_J8",
+      "from": "J7",
+      "to": "J8",
+      "name": "Outer Ring Connector",
+      "length_m": 300,
+      "lanes": 2,
+      "speed_limit_kmh": 50,
+      "capacity": 30,
+      "bidirectional": true,
+      "optional": true
+    }
+  ]
+}
