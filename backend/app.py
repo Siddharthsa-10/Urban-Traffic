@@ -1,8 +1,10 @@
 import asyncio
+import collections
 import json
 import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -29,6 +31,58 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ----------------- BACKEND PERFORMANCE TELEMETRY ----------------- #
+class BackendTelemetry:
+    def __init__(self):
+        self.tick_times = collections.deque(maxlen=200)       # ms
+        self.serialize_times = collections.deque(maxlen=200)  # ms
+        self.solve_times = collections.deque(maxlen=50)       # ms
+        self.delivered_timestamps = collections.deque(maxlen=500) # s
+        self.buffer_queue_depth = 0
+
+    def record_tick(self, ms: float):
+        self.tick_times.append(ms)
+
+    def record_serialize(self, ms: float):
+        self.serialize_times.append(ms)
+
+    def record_solve(self, ms: float):
+        self.solve_times.append(ms)
+
+    def record_delivery(self):
+        self.delivered_timestamps.append(time.time())
+
+    def get_summary(self, window_s: float = 5.0) -> Dict[str, Any]:
+        now = time.time()
+        recent_delivs = [t for t in self.delivered_timestamps if now - t <= window_s]
+        actual_window = max(0.5, (now - min(recent_delivs)) if len(recent_delivs) > 1 else window_s)
+        send_rate = len(recent_delivs) / actual_window if recent_delivs else 0.0
+
+        def stats(dq):
+            if not dq:
+                return 0.0, 0.0
+            arr = list(dq)
+            avg = float(np.mean(arr))
+            p95 = float(np.percentile(arr, 95))
+            return round(avg, 2), round(p95, 2)
+
+        tick_avg, tick_p95 = stats(self.tick_times)
+        ser_avg, ser_p95 = stats(self.serialize_times)
+        solve_avg, solve_p95 = stats(self.solve_times)
+
+        return {
+            "tick_ms_avg": tick_avg,
+            "tick_ms_p95": tick_p95,
+            "serialize_ms_avg": ser_avg,
+            "serialize_ms_p95": ser_p95,
+            "ws_send_rate": round(send_rate, 2),
+            "solve_ms_avg": solve_avg,
+            "solve_ms_p95": solve_p95,
+            "queue_depth": self.buffer_queue_depth
+        }
+
+telemetry = BackendTelemetry()
 
 # ----------------- SIMULATION STATE MANAGER ----------------- #
 class SimulationCoordinator:
@@ -58,12 +112,16 @@ class SimulationCoordinator:
         self.trigger_solve()
 
     def trigger_solve(self):
+        t0 = time.perf_counter()
         decisions, solve_data = self.ctrl_hybrid.solve_epoch(
             self.sim_hybrid.junctions,
             self.sim_hybrid.network,
             self.corridor.preempted_junctions,
             self.events.weather
         )
+        t_solve = (time.perf_counter() - t0) * 1000.0
+        telemetry.record_solve(t_solve)
+
         self.latest_solve_data = solve_data
         for j_id, plan_id in decisions.items():
             self.sim_hybrid.junctions[j_id].apply_plan(plan_id)
@@ -75,6 +133,8 @@ class SimulationCoordinator:
     def step(self):
         if self.paused:
             return
+
+        t0 = time.perf_counter()
 
         # Check 30s decision epoch for hybrid controller
         if self.sim_hybrid.sim_time - self.last_epoch_time >= self.epoch_interval:
@@ -97,6 +157,9 @@ class SimulationCoordinator:
         self.sim_hybrid.step()
         self.sim_fixed.step()
         self.sim_rule.step()
+
+        t_tick = (time.perf_counter() - t0) * 1000.0
+        telemetry.record_tick(t_tick)
 
     def get_full_frame(self) -> Dict[str, Any]:
         # Generate ghost queues from fixed-time simulator for Ghost View
@@ -256,6 +319,11 @@ async def action_time_control(req: TimeControlRequest):
         coordinator.speed_multiplier = req.speed
     return {"status": "ok", "paused": coordinator.paused, "speed": coordinator.speed_multiplier}
 
+@app.get("/api/telemetry/backend")
+async def get_backend_telemetry():
+    """Returns sliding window backend performance statistics."""
+    return telemetry.get_summary(window_s=5.0)
+
 @app.get("/api/benchmark/10seeds")
 async def get_benchmark():
     """Run 10 seeds and return mean + spread comparison."""
@@ -274,9 +342,15 @@ async def websocket_endpoint(websocket: WebSocket):
     # 2. Enter streaming loop
     try:
         while True:
-            # Send latest simulation frame
+            # Send latest simulation frame with serialization measurement
+            t0 = time.perf_counter()
             frame = coordinator.get_full_frame()
-            await websocket.send_json(frame)
+            payload = json.dumps(frame)
+            t_ser = (time.perf_counter() - t0) * 1000.0
+            telemetry.record_serialize(t_ser)
+
+            await websocket.send_text(payload)
+            telemetry.record_delivery()
 
             # Non-blocking read of any client messages
             try:
@@ -300,13 +374,22 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Background simulation ticker solely advances physics
 async def simulation_ticker():
+    last_log_time = time.time()
     while True:
         try:
             if not coordinator.paused:
                 coordinator.step()
+            
+            # Periodic telemetry log every 5s
+            if time.time() - last_log_time >= 5.0:
+                last_log_time = time.time()
+                stats = telemetry.get_summary(window_s=5.0)
+                print(f"[TELEMETRY-5s] Tick: {stats['tick_ms_avg']:.2f}ms (p95: {stats['tick_ms_p95']:.2f}ms) | Ser: {stats['serialize_ms_avg']:.2f}ms | SendRate: {stats['ws_send_rate']:.1f} fps | Solve: {stats['solve_ms_avg']:.2f}ms")
+
             delay = 0.1 / max(0.25, coordinator.speed_multiplier)
             await asyncio.sleep(delay)
-        except Exception:
+        except Exception as e:
+            print(f"[Ticker Error] {e}")
             await asyncio.sleep(0.1)
 
 @app.on_event("startup")

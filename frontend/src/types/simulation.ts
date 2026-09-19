@@ -30,6 +30,7 @@ export interface VehicleData {
   wait_time: number;
   color: string;
   length: number;
+  lane?: number;
   is_ghost?: boolean;
 }
 

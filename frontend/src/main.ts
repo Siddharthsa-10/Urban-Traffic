@@ -9,6 +9,7 @@ import { ScoreboardModal } from './components/scoreboard_modal';
 import { GlossaryPopover } from './components/glossary';
 import { GuidedModeManager } from './guided/guided_mode';
 import { sound } from './audio/sound';
+import { frontendTelemetry } from './telemetry';
 
 class TrafficControlApp {
   private socket: SimulationSocket;
@@ -186,6 +187,8 @@ class TrafficControlApp {
     // 1. Render Stage Canvas
     this.renderer.render(frame);
 
+    const tDomStart = performance.now();
+
     // 2. Pass frame to Guided Mode for live scene metric sync
     this.guidedMode.setFrame(frame);
 
@@ -253,6 +256,9 @@ class TrafficControlApp {
     if (frame.latest_solve) {
       this.solverDrawer.updateSolve(frame.latest_solve);
     }
+
+    const tDomDuration = performance.now() - tDomStart;
+    frontendTelemetry.recordDomUpdate(tDomDuration);
   }
 
   private renderShiftLog(logs: any[]) {

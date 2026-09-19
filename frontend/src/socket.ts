@@ -1,4 +1,5 @@
 import { SimulationFrame } from './types/simulation';
+import { frontendTelemetry } from './telemetry';
 
 export class SimulationSocket {
   private ws: WebSocket | null = null;
@@ -31,10 +32,23 @@ export class SimulationSocket {
       };
 
       this.ws.onmessage = (event) => {
+        const t0 = performance.now();
+        let frame: SimulationFrame;
         try {
-          const frame = JSON.parse(event.data) as SimulationFrame;
+          frame = JSON.parse(event.data) as SimulationFrame;
+        } catch (e) {
+          return;
+        }
+        const tParse = performance.now() - t0;
+        frontendTelemetry.recordWsParse(tParse);
+
+        try {
           if (this.onFrameCallback) this.onFrameCallback(frame);
-        } catch (e) {}
+        } catch (err) {
+          console.error("Frame processing error:", err);
+        }
+        const tTotal = performance.now() - t0;
+        frontendTelemetry.recordWsHandle(tTotal);
       };
 
       this.ws.onclose = () => {
