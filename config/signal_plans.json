@@ -1,0 +1,49 @@
+{
+  "cycle_length_s": 80,
+  "yellow_s": 3,
+  "all_red_s": 2,
+  "pedestrian_min_walk_s": 15,
+  "pedestrian_max_wait_s": 90,
+  "plans": {
+    "0": {
+      "plan_id": 0,
+      "a": 0,
+      "b": 0,
+      "name": "NS Moderate",
+      "description": "North-South 40s / East-West 30s",
+      "primary_axis": "NS",
+      "primary_green_s": 40,
+      "secondary_green_s": 30
+    },
+    "1": {
+      "plan_id": 1,
+      "a": 0,
+      "b": 1,
+      "name": "NS Strong",
+      "description": "North-South 50s / East-West 20s",
+      "primary_axis": "NS",
+      "primary_green_s": 50,
+      "secondary_green_s": 20
+    },
+    "2": {
+      "plan_id": 2,
+      "a": 1,
+      "b": 0,
+      "name": "EW Moderate",
+      "description": "East-West 40s / North-South 30s",
+      "primary_axis": "EW",
+      "primary_green_s": 40,
+      "secondary_green_s": 30
+    },
+    "3": {
+      "plan_id": 3,
+      "a": 1,
+      "b": 1,
+      "name": "EW Strong",
+      "description": "East-West 50s / North-South 20s",
+      "primary_axis": "EW",
+      "primary_green_s": 50,
+      "secondary_green_s": 20
+    }
+  }
+}
