@@ -1,0 +1,258 @@
+{
+  "simulation": {
+    "tick_seconds": 1.0,
+    "decision_epoch_seconds": 30,
+    "default_seed": 42
+  },
+  "vehicle_types": {
+    "two_wheeler": {
+      "name": "Two-Wheeler",
+      "length_m": 2.0,
+      "width_m": 1.0,
+      "max_speed_mps": 14.0,
+      "max_accel_mps2": 2.6,
+      "desired_decel_mps2": 2.4,
+      "min_gap_m": 1.2,
+      "time_headway_s": 0.9,
+      "idle_fuel_ml_per_s": 0.12,
+      "emission_kg_per_l": 2.3,
+      "stop_fuel_penalty_l": 0.003
+    },
+    "auto": {
+      "name": "Auto-Rickshaw",
+      "length_m": 3.0,
+      "width_m": 1.5,
+      "max_speed_mps": 11.0,
+      "max_accel_mps2": 1.8,
+      "desired_decel_mps2": 2.0,
+      "min_gap_m": 1.5,
+      "time_headway_s": 1.1,
+      "idle_fuel_ml_per_s": 0.22,
+      "emission_kg_per_l": 2.3,
+      "stop_fuel_penalty_l": 0.005
+    },
+    "car": {
+      "name": "Passenger Car",
+      "length_m": 4.5,
+      "width_m": 1.8,
+      "max_speed_mps": 15.0,
+      "max_accel_mps2": 2.2,
+      "desired_decel_mps2": 2.2,
+      "min_gap_m": 2.0,
+      "time_headway_s": 1.2,
+      "idle_fuel_ml_per_s": 0.38,
+      "emission_kg_per_l": 2.3,
+      "stop_fuel_penalty_l": 0.008
+    },
+    "bus": {
+      "name": "City Bus",
+      "length_m": 11.0,
+      "width_m": 2.5,
+      "max_speed_mps": 10.0,
+      "max_accel_mps2": 1.1,
+      "desired_decel_mps2": 1.4,
+      "min_gap_m": 3.0,
+      "time_headway_s": 1.6,
+      "idle_fuel_ml_per_s": 1.1,
+      "emission_kg_per_l": 2.7,
+      "stop_fuel_penalty_l": 0.025
+    },
+    "ambulance": {
+      "name": "Emergency Ambulance",
+      "length_m": 5.5,
+      "width_m": 2.0,
+      "max_speed_mps": 18.0,
+      "max_accel_mps2": 2.8,
+      "desired_decel_mps2": 2.8,
+      "min_gap_m": 1.8,
+      "time_headway_s": 1.0,
+      "idle_fuel_ml_per_s": 0.55,
+      "emission_kg_per_l": 2.7,
+      "stop_fuel_penalty_l": 0.01
+    }
+  },
+  "junctions": {
+    "J1": {
+      "id": "J1",
+      "name": "Clock Tower",
+      "col": 0,
+      "row": 0,
+      "world_x": 100.0,
+      "world_y": 100.0,
+      "is_8_junction_only": false
+    },
+    "J2": {
+      "id": "J2",
+      "name": "Market Circle",
+      "col": 1,
+      "row": 0,
+      "world_x": 320.0,
+      "world_y": 100.0,
+      "is_8_junction_only": false
+    },
+    "J3": {
+      "id": "J3",
+      "name": "Hospital Gate",
+      "col": 0,
+      "row": 1,
+      "world_x": 100.0,
+      "world_y": 300.0,
+      "is_8_junction_only": false
+    },
+    "J4": {
+      "id": "J4",
+      "name": "Bus Stand",
+      "col": 1,
+      "row": 1,
+      "world_x": 320.0,
+      "world_y": 300.0,
+      "is_8_junction_only": false
+    }
+  },
+  "special_sites": {
+    "HOSP": {
+      "id": "HOSP",
+      "name": "City Hospital West",
+      "world_x": -30.0,
+      "world_y": 300.0,
+      "connects_to": "J3",
+      "type": "hospital"
+    },
+    "SITE": {
+      "id": "SITE",
+      "name": "Industrial Accident Site",
+      "world_x": 450.0,
+      "world_y": 100.0,
+      "connects_to": "J2",
+      "type": "incident"
+    }
+  },
+  "road_segments": [
+    {
+      "id": "L_J1_J2",
+      "from": "J1",
+      "to": "J2",
+      "length_m": 220.0,
+      "lanes": 3,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 2400,
+      "is_arterial": true,
+      "tag": "North Arterial"
+    },
+    {
+      "id": "L_J2_J1",
+      "from": "J2",
+      "to": "J1",
+      "length_m": 220.0,
+      "lanes": 3,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 2400,
+      "is_arterial": true,
+      "tag": "North Arterial"
+    },
+    {
+      "id": "L_J3_J4",
+      "from": "J3",
+      "to": "J4",
+      "length_m": 220.0,
+      "lanes": 2,
+      "speed_limit_mps": 11.0,
+      "capacity_vph": 1500,
+      "is_underpass": true,
+      "tag": "Low-lying Underpass"
+    },
+    {
+      "id": "L_J4_J3",
+      "from": "J4",
+      "to": "J3",
+      "length_m": 220.0,
+      "lanes": 2,
+      "speed_limit_mps": 11.0,
+      "capacity_vph": 1500,
+      "is_underpass": true,
+      "tag": "Low-lying Underpass"
+    },
+    {
+      "id": "L_J1_J3",
+      "from": "J1",
+      "to": "J3",
+      "length_m": 200.0,
+      "lanes": 2,
+      "speed_limit_mps": 12.0,
+      "capacity_vph": 1600,
+      "tag": "West Cross Link"
+    },
+    {
+      "id": "L_J3_J1",
+      "from": "J3",
+      "to": "J1",
+      "length_m": 200.0,
+      "lanes": 2,
+      "speed_limit_mps": 12.0,
+      "capacity_vph": 1600,
+      "tag": "West Cross Link"
+    },
+    {
+      "id": "L_J2_J4",
+      "from": "J2",
+      "to": "J4",
+      "length_m": 200.0,
+      "lanes": 1,
+      "speed_limit_mps": 9.0,
+      "capacity_vph": 900,
+      "is_narrow": true,
+      "tag": "Market Narrow Lane"
+    },
+    {
+      "id": "L_J4_J2",
+      "from": "J4",
+      "to": "J2",
+      "length_m": 200.0,
+      "lanes": 1,
+      "speed_limit_mps": 9.0,
+      "capacity_vph": 900,
+      "is_narrow": true,
+      "tag": "Market Narrow Lane"
+    },
+    {
+      "id": "L_HOSP_J3",
+      "from": "HOSP",
+      "to": "J3",
+      "length_m": 130.0,
+      "lanes": 2,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 1800,
+      "tag": "Hospital Approach"
+    },
+    {
+      "id": "L_J3_HOSP",
+      "from": "J3",
+      "to": "HOSP",
+      "length_m": 130.0,
+      "lanes": 2,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 1800,
+      "tag": "Hospital Departure"
+    },
+    {
+      "id": "L_SITE_J2",
+      "from": "SITE",
+      "to": "J2",
+      "length_m": 130.0,
+      "lanes": 2,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 1800,
+      "tag": "Incident Approach"
+    },
+    {
+      "id": "L_J2_SITE",
+      "from": "J2",
+      "to": "SITE",
+      "length_m": 130.0,
+      "lanes": 2,
+      "speed_limit_mps": 14.0,
+      "capacity_vph": 1800,
+      "tag": "Incident Departure"
+    }
+  ]
+}

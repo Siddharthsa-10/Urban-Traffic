@@ -1,0 +1,26 @@
+/* The Night Shift Palette — strictly locked */
+:root {
+  --color-ink: #14110F;
+  --color-panel: #1D1915;
+  --color-panel-border: #2E2721;
+  --color-panel-hover: #26211C;
+  --color-paper: #EDE4D3;
+  --color-paper-muted: #A39B8B;
+  
+  /* The Two Lights */
+  --color-sodium: #F2A33A;
+  --color-sodium-dim: #7A4E15;
+  --color-quantum: #9FD8FF;
+  --color-quantum-deep: #4FA3D9;
+  --color-quantum-dim: #1C3B52;
+
+  /* Signals */
+  --color-signal-green: #6CC58A;
+  --color-signal-yellow: #F5D04A;
+  --color-signal-red: #E5533D;
+
+  /* Typography */
+  --font-serif: "Instrument Serif", "Fraunces", Georgia, serif;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Code", "Consolas", monospace;
+}

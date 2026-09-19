@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "notice": "All coefficients below are engineering assumptions derived from urban driving cycles (e.g. ARAI/WLTP city approximations), not empirical telemetry measurements.",
+    "formula": "Fuel (L) = (idle_rate_lps * idle_s) + (stops * stop_penalty_l) + (cruise_l_per_km * distance_km); CO2 (kg) = Fuel (L) * emission_factor_kg_per_l"
+  },
+  "assumptions": {
+    "two_wheeler": {
+      "type_label": "Two-Wheeler (Motorcycle / Scooter)",
+      "engine": "110-150cc 4-stroke Petrol",
+      "idle_rate_lps": 0.00012,
+      "stop_penalty_l": 0.0030,
+      "cruise_l_per_km": 0.022,
+      "emission_factor_kg_per_l": 2.31,
+      "notes": "High stop-and-go sensitivity, lowest idling consumption"
+    },
+    "auto": {
+      "type_label": "Auto-Rickshaw (3-Wheeler)",
+      "engine": "200cc 4-stroke Petrol/CNG equivalent",
+      "idle_rate_lps": 0.00022,
+      "stop_penalty_l": 0.0050,
+      "cruise_l_per_km": 0.038,
+      "emission_factor_kg_per_l": 2.31,
+      "notes": "Moderate acceleration fuel spike on restart"
+    },
+    "car": {
+      "type_label": "Passenger Car",
+      "engine": "1.2L - 1.5L Petrol Hatchback/Sedan",
+      "idle_rate_lps": 0.00038,
+      "stop_penalty_l": 0.0085,
+      "cruise_l_per_km": 0.068,
+      "emission_factor_kg_per_l": 2.31,
+      "notes": "Air conditioning load included in baseline idle"
+    },
+    "bus": {
+      "type_label": "City Transit Bus",
+      "engine": "6-cylinder Turbo Diesel",
+      "idle_rate_lps": 0.00110,
+      "stop_penalty_l": 0.0250,
+      "cruise_l_per_km": 0.280,
+      "emission_factor_kg_per_l": 2.68,
+      "notes": "Heavy inertia penalty per stop (25mL per stop)"
+    },
+    "ambulance": {
+      "type_label": "Emergency Ambulance",
+      "engine": "2.2L Turbo Diesel",
+      "idle_rate_lps": 0.00055,
+      "stop_penalty_l": 0.0100,
+      "cruise_l_per_km": 0.095,
+      "emission_factor_kg_per_l": 2.68,
+      "notes": "Auxiliary medical electronics load during idle"
+    }
+  }
+}
